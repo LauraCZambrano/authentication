@@ -1,0 +1,231 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Authentication",
+        "description": "Authentication with NodeJs"
+    },
+    "schemes": [
+        "http"
+    ],
+    "host": "localhost:8000",
+    "basePath": "",
+    "paths": {
+
+
+        "/auth/signup": {
+            "post": {
+                "summary": "Sign Up",
+                "description": "Path that registers the user",
+                "parameters":
+                [{
+                    "name": "user",
+                    "in": "body",
+                    "description": "User Information",
+                    "properties": {
+                        "full_name": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string" 
+                        },
+                        "password": {
+                            "type": "string"
+                        }
+                    }
+                }],
+                "responses": {
+                    "201": {
+                        "description": "User was created",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ok": {
+                                    "type": "boolean",
+                                    "example": true
+                                },
+                                "user": {
+                                    "$ref": "#/definitions/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error creating user",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ok": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "example": "Error message"
+                                }
+                            } 
+                        }
+                    }
+                }
+            }
+        },
+
+
+        "/auth/signin": {
+            "post": {
+                "summary": "Login",
+                "description": "Path to login",
+                "parameters":
+                [{
+                    "name": "user",
+                    "in": "body",
+                    "description": "Login information",
+                    "properties": {
+                        "email": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Session started",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ok": {
+                                    "type": "boolean",
+                                    "example": true
+                                },
+                                "user": {
+                                    "$ref": "#/definitions/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Failed to login",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ok": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "example": "User not found or Incorrect user or password"
+                                }
+                            } 
+                        }
+                    },
+                    "500": {
+                        "description": "Error in Database",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ok": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "example": "Error searching in DB"
+                                }
+                            } 
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+        "/auth/session": {
+            "get": {
+                "summary": "Session",
+                "description": "Path to verify that the user is logged in",
+                "responses": {
+                    "200": {
+                        "description": "Logged in",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ok": {
+                                    "type": "boolean",
+                                    "example": true
+                                },
+                                "user": {
+                                    "$ref": "#/definitions/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Not logged in",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ok": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "example": "Not logged in"
+                                }
+                            } 
+                        }
+                    }
+                }
+            }
+        },
+
+
+        "/auth/logout": {
+            "get": {
+                "summary": "Logout",
+                "description": "Path to sign out",
+                "responses": {
+                    "200": {
+                        "description": "Logout",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ok": {
+                                    "type": "boolean",
+                                    "example": true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    },
+
+    "definitions": {
+        "User": {
+            "required": [
+                "full_name",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "full_name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "unique": true
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
